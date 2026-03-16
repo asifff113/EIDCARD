@@ -1,26 +1,326 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #02020a;
+  --bg2: #07070f;
+  --surface: #0c0c18;
+  --gold: #d4af37;
+  --gold2: #f0d060;
+  --gold3: #8a6010;
+  --text: #eae6f5;
+  --muted: #38364e;
+  --dim: #4a3820;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-gold: var(--gold);
+  --color-gold2: var(--gold2);
+  --color-gold3: var(--gold3);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --font-sans: var(--font-dm-sans);
+  --font-heading: var(--font-playfair);
+  --font-arabic: var(--font-amiri);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
 }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #d4af3750; border-radius: 4px; }
+
+/* ── ANIMATIONS ──────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -400% center; }
+  100% { background-position: 400% center; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes rotateSlow { to { transform: rotate(360deg); } }
+@keyframes rotateSlowR { to { transform: rotate(-360deg); } }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(36px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.82) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: .5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: .1; transform: scale(.7); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+@keyframes candleFlame {
+  0%, 100% { transform: scaleX(1) translateY(0); }
+  33% { transform: scaleX(.8) translateY(-3px); }
+  66% { transform: scaleX(1.1) translateY(1px); }
+}
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 0 20px var(--gold); }
+  50% { box-shadow: 0 0 40px var(--gold), 0 0 60px rgba(212, 175, 55, .4); }
+}
+@keyframes borderShine {
+  0%, 100% { border-color: rgba(212, 175, 55, .25); }
+  50% { border-color: rgba(212, 175, 55, .7); }
+}
+@keyframes petals {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+  15% { opacity: .8; }
+  100% { transform: translateY(130px) rotate(360deg); opacity: 0; }
+}
+@keyframes spotlight {
+  0%, 100% { opacity: .8; }
+  50% { opacity: 1; }
+}
+
+/* ── GALLERY PAGE (Museum Theme) ────────────────── */
+.gallery-page {
+  --wall: #f0ece4;
+  --wall2: #e8e2d8;
+  --floor: #2a2018;
+  --frame-dark: #1a120a;
+  --frame-gold: #8a6c20;
+  --mat: #f8f4ee;
+  --ink: #1a1a1a;
+  --label: #5a5040;
+  --spot: rgba(255,240,180,.12);
+  --spot2: rgba(255,240,180,.06);
+  background: var(--wall) !important;
+  color: var(--ink) !important;
+  font-family: var(--font-jost), 'Jost', sans-serif;
+  cursor: default;
+}
+
+/* Museum Nav */
+.museum-nav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--frame-dark);
+  border-bottom: 1px solid #3a2a14;
+  padding: 0 60px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 4px 30px rgba(0,0,0,.5);
+}
+@media(max-width:640px) { .museum-nav { padding: 0 20px; } }
+
+/* Museum Entrance */
+.entrance {
+  position: relative; z-index: 1; background: var(--frame-dark);
+  min-height: 80vh; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; text-align: center; padding: 80px 40px; overflow: hidden;
+}
+.entrance::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,168,76,.08), transparent);
+}
+.arch {
+  width: min(500px, 80vw); height: min(500px, 80vw);
+  border: 2px solid rgba(212,168,76,.15);
+  border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  box-shadow: 0 0 100px rgba(212,168,76,.06) inset;
+}
+
+/* Gallery Info Bar */
+.gallery-info {
+  position: relative; z-index: 1; background: var(--wall2);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  padding: 20px 60px; display: flex; align-items: center; justify-content: space-between;
+}
+@media(max-width:800px) {
+  .gallery-info { flex-direction: column; gap: 16px; padding: 20px; text-align: center; }
+}
+
+/* Gallery Room */
+.gallery-room {
+  position: relative; z-index: 1; padding: 60px 60px 80px; background: var(--wall);
+}
+@media(max-width:640px) { .gallery-room { padding: 60px 20px 80px; } }
+
+/* Gallery Wall Grid */
+.wall {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 52px 44px; align-items: start;
+}
+@media(max-width:960px) { .wall { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width:600px) { .wall { grid-template-columns: 1fr; } }
+
+/* Framed Artwork */
+.artwork { cursor: pointer; animation-name: fadeUp; animation-duration: .7s; animation-timing-function: ease; animation-fill-mode: both; position: relative; }
+.artwork:hover .frame-shadow { transform: translateY(3px); box-shadow: 0 0 30px rgba(212,175,55,.28), 0 20px 60px rgba(0,0,0,.32), 0 4px 12px rgba(0,0,0,.18); }
+.artwork:hover .plaque { opacity: 1; }
+
+/* Hanging Wire */
+.wire { display: flex; justify-content: center; margin-bottom: 10px; opacity: .35; }
+.wire svg { display: block; }
+
+/* Frame */
+.frame-shadow {
+  transition: all .4s;
+  box-shadow: 0 14px 50px rgba(0,0,0,.22), 0 4px 12px rgba(0,0,0,.14), 2px 2px 0 rgba(0,0,0,.04), -2px -2px 0 rgba(0,0,0,.02);
+}
+.frame-outer { padding: 10px; position: relative; }
+.frame-inner-border { padding: 6px; position: relative; }
+
+/* Spotlight on artwork canvas */
+.art-canvas { position: relative; overflow: hidden; }
+.art-canvas::before {
+  content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+  width: 120%; height: 100%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,240,160,.18), transparent 70%);
+  pointer-events: none; z-index: 3; animation: spotlight 4s ease-in-out infinite;
+}
+
+/* Mat */
+.mat {
+  background: var(--mat); padding: 18px 18px 24px;
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+
+/* Art piece inside mat */
+.art-piece {
+  width: 100%; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Museum Plaque */
+.plaque { margin-top: 18px; text-align: center; transition: opacity .3s; opacity: .7; }
+.plaque-line { width: 32px; height: 1px; background: rgba(0,0,0,.15); margin: 8px auto; }
+.plaque-title {
+  font-family: var(--font-libre), 'Libre Baskerville', serif;
+  font-size: 15px; font-style: italic; margin-bottom: 3px;
+}
+.plaque-ar {
+  font-family: var(--font-amiri), 'Amiri', serif;
+  font-size: 14px; direction: rtl; color: var(--label); margin-bottom: 4px;
+}
+.plaque-meta {
+  font-family: var(--font-jost), 'Jost', sans-serif;
+  font-size: 10px; letter-spacing: 2px; color: var(--label); text-transform: uppercase;
+}
+
+/* Size Variations */
+.artwork.tall .mat { padding: 24px 20px 32px; }
+.artwork.tall .art-piece { height: 340px; }
+.artwork.med .art-piece { height: 260px; }
+.artwork.sq .art-piece { height: 220px; }
+.artwork.wide .art-piece { height: 180px; }
+
+/* Room Divider */
+.room-div {
+  position: relative; z-index: 1; background: var(--floor); height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border-top: 1px solid rgba(255,255,255,.04);
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+
+/* Museum Footer */
+.museum-foot {
+  position: relative; z-index: 1; background: var(--frame-dark);
+  padding: 48px 60px; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(255,255,255,.04); flex-wrap: wrap; gap: 24px;
+}
+@media(max-width:640px) {
+  .museum-foot { padding: 48px 20px; flex-direction: column; text-align: center; }
+}
+
+/* Lightbox */
+.lbg {
+  position: fixed; inset: 0; z-index: 500; background: rgba(15,12,8,.97);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  animation: fadeIn .35s ease both;
+}
+.lbox {
+  width: min(760px, 96vw); display: grid;
+  grid-template-columns: 1fr .75fr; gap: 0;
+  animation: scaleIn .4s cubic-bezier(.34,1.2,.64,1) both;
+}
+@media(max-width:660px) { .lbox { grid-template-columns: 1fr; } }
+.lb-art {
+  height: 460px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+@media(max-width:660px) { .lb-art { height: 300px; } }
+.lb-info {
+  background: #0d0a06; padding: 40px 36px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  border-left: 1px solid rgba(255,255,255,.04);
+}
+.lbbtn {
+  padding: 12px 20px; border: 1px solid;
+  font-family: var(--font-jost), 'Jost', sans-serif;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  cursor: pointer; transition: all .25s; background: transparent;
+}
+.lbbtn.primary { border-color: #d4a84c; color: #d4a84c; }
+.lbbtn.primary:hover { background: rgba(212,168,76,.1); }
+.lbbtn.ghost { border-color: #3a2a14; color: #5a4020; }
+.lbbtn.ghost:hover { border-color: #5a4020; color: #9a8060; }
+
+/* Gallery-specific scrollbar */
+.gallery-page::-webkit-scrollbar-track { background: var(--wall); }
+.gallery-page::-webkit-scrollbar-thumb { background: rgba(90,80,64,.3); }
+
+/* ── CINEMATIC PAGE ────────────────────────────────── */
+.cinematic-page { background: #000; color: #fff; font-family: var(--font-dm-sans), 'DM Sans', sans-serif; }
+.cinematic-page html, .cinematic-page { scroll-snap-type: y mandatory; }
+
+/* Scroll progress */
+.cine-prog { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, #c9a84c, #f0d080); z-index: 999; transition: width .1s; }
+
+/* Nav dots */
+.cine-dots { position: fixed; right: 28px; top: 50%; transform: translateY(-50%); z-index: 900; display: flex; flex-direction: column; gap: 12px; }
+.cine-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.3); cursor: pointer; transition: all .4s; background: transparent; padding: 0; }
+.cine-dot.on { background: #c9a84c; border-color: #c9a84c; transform: scale(1.4); }
+
+/* Scene — full screen scroll-snap */
+.cine-scene { height: 100vh; width: 100%; position: relative; scroll-snap-align: start; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+/* Scene labels */
+.scene-num { position: absolute; top: 32px; left: 40px; font-family: var(--font-cormorant), 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; }
+.scene-tag { position: absolute; top: 32px; right: 40px; font-family: var(--font-dm-sans), 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; }
+
+/* Open Card button */
+.open-btn { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.3); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.6); font-family: var(--font-dm-sans), 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; padding: 10px 24px; cursor: pointer; transition: all .3s; white-space: nowrap; border-radius: 40px; }
+.open-btn:hover { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.6); box-shadow: 0 0 20px rgba(255,255,255,.15); }
+
+/* Title scene */
+.s-title { background: #000; }
+.s-title canvas { position: absolute; inset: 0; }
+.big-eid { font-family: var(--font-italiana), 'Italiana', serif; font-size: clamp(80px, 20vw, 220px); line-height: .85; background: linear-gradient(160deg, #7a5808, #c9a84c, #f0d080, #c9a84c, #7a5808); background-size: 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 5s linear infinite; }
+.big-mubarak { font-family: var(--font-cormorant), 'Cormorant Garamond', serif; font-size: clamp(24px, 6vw, 72px); font-style: italic; font-weight: 300; color: rgba(255,255,255,.5); letter-spacing: 8px; text-transform: uppercase; }
+.title-ar { font-family: var(--font-amiri), 'Amiri', serif; font-size: clamp(28px, 5vw, 60px); color: #c9a84c; direction: rtl; opacity: .8; margin: 16px 0; }
+.title-pill { font-size: 10px; letter-spacing: 6px; color: #c9a84c; text-transform: uppercase; margin-bottom: 20px; opacity: .7; animation: fadeUp .8s ease both .1s; background: rgba(0,0,0,.35); backdrop-filter: blur(8px); border: 1px solid rgba(201,168,76,.35); border-radius: 40px; padding: 8px 24px; display: inline-block; }
+.scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); font-size: 10px; letter-spacing: 4px; color: rgba(255,255,255,.25); text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 8px; animation: cineFloat 2.5s ease-in-out infinite; }
+.scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, rgba(201,168,76,.4), transparent); }
+@keyframes cineFloat { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-8px); } }
+
+/* Cinematic modal */
+.cine-mbg { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.96); backdrop-filter: blur(30px); display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn .3s ease both; }
+.cine-mbox { width: min(520px, 96vw); animation: slideUp .4s cubic-bezier(.34,1.4,.64,1) both; border-radius: 2rem; overflow: hidden; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+.cine-mcard { height: 440px; position: relative; overflow: hidden; }
+.cine-mfoot { padding: 24px 28px; display: flex; gap: 12px; align-items: center; background: #06060e; border-top: 1px solid rgba(255,255,255,.04); }
+.cine-mbtn { border: none; border-radius: 3px; padding: 12px 22px; cursor: pointer; font-family: var(--font-dm-sans), 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: all .25s; }
+.cine-mbtn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+@keyframes starPulse { 0%,100% { opacity: .85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }

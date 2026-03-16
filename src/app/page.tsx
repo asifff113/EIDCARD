@@ -1,65 +1,67 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useMemo } from "react";
+import Starfield from "@/components/shared/Starfield";
+import Navbar from "@/components/layout/Navbar";
+import Hero from "@/components/home/Hero";
+import CategoryFilter from "@/components/cards/CategoryFilter";
+import FlipCard from "@/components/cards/FlipCard";
+import CardModal from "@/components/cards/CardModal";
+import Footer from "@/components/layout/Footer";
+import { CARDS, type EidCard } from "@/data/cards";
 
 export default function Home() {
+  const [activeTag, setActiveTag] = useState("All");
+  const [modalCard, setModalCard] = useState<EidCard | null>(null);
+
+  const filtered = useMemo(
+    () => (activeTag === "All" ? CARDS : CARDS.filter((c) => c.tag === activeTag)),
+    [activeTag]
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <Starfield />
+      <Navbar cardCount={CARDS.length} />
+      <Hero />
+
+      {/* Section Head */}
+      <div
+        id="card-grid"
+        className="relative z-[1] px-[60px] pt-20 pb-13 flex items-end justify-between animate-[fadeUp_.7s_ease_both_.2s] max-[640px]:px-5 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-1.5"
+      >
+        <div>
+          <h2 className="font-heading text-[clamp(32px,4vw,52px)] font-bold tracking-[-1px]">
+            The Royal <em className="text-[var(--gold)] italic">Collection</em>
+          </h2>
+          <p className="text-[10px] tracking-[3.5px] text-[var(--dim)] uppercase mt-2.5">
+            Hover to reveal · Click to open · Share with love
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="font-heading text-[90px] font-bold text-[rgba(212,175,55,.05)] leading-none tracking-[-6px] select-none max-[640px]:hidden">
+          {filtered.length}
         </div>
-      </main>
-    </div>
+      </div>
+
+      {/* Filter */}
+      <div className="relative z-[1] px-[60px] max-[640px]:px-5">
+        <CategoryFilter active={activeTag} onChange={setActiveTag} />
+      </div>
+
+      {/* Card Grid */}
+      <div className="relative z-[1] grid grid-cols-4 gap-6 px-[60px] pb-[100px] max-[1200px]:grid-cols-3 max-[800px]:grid-cols-2 max-[800px]:px-5 max-[800px]:pb-[70px] max-[480px]:grid-cols-1">
+        {filtered.map((card, i) => (
+          <FlipCard
+            key={card.id}
+            card={card}
+            index={i}
+            onOpen={setModalCard}
+          />
+        ))}
+      </div>
+
+      <Footer />
+      <CardModal card={modalCard} onClose={() => setModalCard(null)} />
+    </>
   );
 }
