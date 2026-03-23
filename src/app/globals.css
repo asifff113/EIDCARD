@@ -819,6 +819,8 @@ body {
   text-decoration: none;
   min-width: 0;
   flex: 1 1 auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: opacity .2s;
 }
 .navbar-logo:hover { opacity: .85; }
@@ -883,6 +885,8 @@ body {
   text-transform: uppercase;
   text-decoration: none;
   color: rgba(255,255,255,.45);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: color .3s;
   padding: 4px 0;
 }
@@ -1017,6 +1021,8 @@ body {
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: all .3s cubic-bezier(.4,0,.2,1);
   white-space: nowrap;
 }
@@ -1067,11 +1073,10 @@ body {
 .navbar-mobile-links {
   display: none;
   gap: 8px;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  overflow-x: visible;
   padding: 0 16px 14px;
-  scrollbar-width: none;
 }
-.navbar-mobile-links::-webkit-scrollbar { display: none; }
 @media (max-width: 640px) {
   .navbar-mobile-links { display: flex; }
 }
@@ -1089,6 +1094,8 @@ body {
   color: rgba(255,255,255,.55);
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.06);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: all .3s;
 }
 .navbar-mobile-link--active {

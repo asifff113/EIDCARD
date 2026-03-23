@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { startTransition, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import type { MouseEvent } from "react";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -19,15 +20,27 @@ const navItems: Array<{ key: NavbarProps["active"]; label: string; href: string 
 
 export default function Navbar({ templateCount, active }: NavbarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const authEnabled = isSupabaseConfigured();
   const supabase = useMemo(() => (authEnabled ? createClient() : null), [authEnabled]);
   const [user, setUser] = useState<User | null>(null);
   const [busy, setBusy] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
   const authLabel =
     user?.user_metadata?.full_name ||
     user?.email?.split("@")[0] ||
     "Account";
+  const activeFromPath =
+    pathname === "/"
+      ? "home"
+      : pathname === "/gallery"
+        ? "museum"
+        : active;
+  const pendingActive = pendingHref
+    ? navItems.find((item) => item.href === pendingHref)?.key
+    : undefined;
+  const currentActive = pendingActive ?? activeFromPath;
 
   useEffect(() => {
     if (!supabase) {
@@ -61,6 +74,16 @@ export default function Navbar({ templateCount, active }: NavbarProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    for (const item of navItems) {
+      router.prefetch(item.href);
+    }
+  }, [router]);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
+
   async function handleSignOut() {
     if (!supabase) {
       return;
@@ -71,6 +94,21 @@ export default function Navbar({ templateCount, active }: NavbarProps) {
     setUser(null);
     router.refresh();
     setBusy(false);
+  }
+
+  function handleNavClick(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (pathname === href) {
+      event.preventDefault();
+      setPendingHref(null);
+      return;
+    }
+
+    event.preventDefault();
+    setPendingHref(href);
+    router.prefetch(href);
+    startTransition(() => {
+      router.push(href, { scroll: true });
+    });
   }
 
   return (
@@ -106,12 +144,15 @@ export default function Navbar({ templateCount, active }: NavbarProps) {
         {/* ── Center Nav Links ── */}
         <div className="navbar-links">
           {navItems.map((item) => {
-            const isActive = active === item.key;
+            const isActive = currentActive === item.key;
             return (
               <Link
                 key={item.key}
                 className={`navbar-link ${isActive ? "navbar-link--active" : ""}`}
                 href={item.href}
+                prefetch
+                onClick={(event) => handleNavClick(event, item.href)}
+                onTouchStart={() => router.prefetch(item.href)}
               >
                 {item.label}
               </Link>
@@ -168,12 +209,15 @@ export default function Navbar({ templateCount, active }: NavbarProps) {
       {/* ── Mobile Nav Links ── */}
       <div className="navbar-mobile-links">
         {navItems.map((item) => {
-          const isActive = active === item.key;
+          const isActive = currentActive === item.key;
           return (
             <Link
               key={item.key}
               href={item.href}
               className={`navbar-mobile-link ${isActive ? "navbar-mobile-link--active" : ""}`}
+              prefetch
+              onClick={(event) => handleNavClick(event, item.href)}
+              onTouchStart={() => router.prefetch(item.href)}
             >
               {item.label}
             </Link>
