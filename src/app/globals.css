@@ -808,7 +808,7 @@ body {
   margin: 0 auto;
 }
 @media (max-width: 640px) {
-  .navbar-inner { padding: 14px 16px; }
+  .navbar-inner { padding: 14px 16px; gap: 10px; }
 }
 
 /* ── Logo ── */
@@ -818,6 +818,7 @@ body {
   gap: 14px;
   text-decoration: none;
   min-width: 0;
+  flex: 1 1 auto;
   transition: opacity .2s;
 }
 .navbar-logo:hover { opacity: .85; }
@@ -842,7 +843,25 @@ body {
   white-space: nowrap;
 }
 @media (max-width: 640px) {
-  .navbar-logo-text { font-size: 16px; letter-spacing: 2.5px; }
+  .navbar-logo-text {
+    font-size: 16px;
+    letter-spacing: 2.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+@media (max-width: 480px) {
+  .navbar-logo {
+    gap: 10px;
+  }
+  .navbar-logo-svg {
+    width: 32px;
+    height: 32px;
+  }
+  .navbar-logo-text {
+    font-size: 14px;
+    letter-spacing: 1.8px;
+  }
 }
 
 /* ── Nav Links ── */
@@ -929,6 +948,13 @@ body {
   padding: 7px 14px;
   font-size: 9px;
   letter-spacing: 1.5px;
+}
+@media (max-width: 480px) {
+  .navbar-badge--sm {
+    padding: 6px 11px;
+    font-size: 8px;
+    letter-spacing: 1.2px;
+  }
 }
 
 .navbar-badge-dot {
@@ -1032,6 +1058,7 @@ body {
   display: none;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 @media (max-width: 640px) {
   .navbar-mobile-actions { display: flex; }
@@ -1042,7 +1069,9 @@ body {
   gap: 8px;
   overflow-x: auto;
   padding: 0 16px 14px;
+  scrollbar-width: none;
 }
+.navbar-mobile-links::-webkit-scrollbar { display: none; }
 @media (max-width: 640px) {
   .navbar-mobile-links { display: flex; }
 }
@@ -1067,6 +1096,58 @@ body {
   background: var(--gold);
   border-color: var(--gold);
   font-weight: 600;
+}
+.navbar-mobile-link--primary {
+  color: #0d0d12;
+  background: linear-gradient(135deg, #c9a84c, #f0d060, #d4af37);
+  border-color: rgba(212,175,55,.95);
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(212,175,55,.14);
+}
+.navbar-mobile-link--ghost {
+  color: rgba(255,255,255,.72);
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.1);
+}
+.navbar-mobile-link--button {
+  appearance: none;
+  cursor: pointer;
+}
+
+.navbar-mobile-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(212,175,55,.14);
+  background: rgba(255,255,255,.04);
+  white-space: nowrap;
+}
+.navbar-mobile-account-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #c9a84c, #f0d060);
+  color: #0d0d12;
+  font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.navbar-mobile-account-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.72);
 }
 
 /* ── CARD FLIP ────────────────────────────────── */

@@ -159,28 +159,6 @@ export default function Navbar({ templateCount, active }: NavbarProps) {
 
         {/* ── Mobile Actions ── */}
         <div className="navbar-mobile-actions">
-          {authEnabled ? (
-            user ? (
-              <button
-                type="button"
-                onClick={handleSignOut}
-                disabled={busy}
-                className="navbar-btn navbar-btn--ghost navbar-btn--sm"
-              >
-                {busy ? "Out" : "Sign Out"}
-              </button>
-            ) : (
-              <>
-                <Link href="/signup" className="navbar-btn navbar-btn--primary navbar-btn--sm">
-                  Sign Up
-                </Link>
-                <Link href="/login" className="navbar-btn navbar-btn--ghost navbar-btn--sm">
-                  Sign In
-                </Link>
-              </>
-            )
-          ) : null}
-
           <div className="navbar-badge navbar-badge--sm">
             {templateCount} Cards
           </div>
@@ -201,6 +179,36 @@ export default function Navbar({ templateCount, active }: NavbarProps) {
             </Link>
           );
         })}
+
+        {authEnabled ? (
+          user ? (
+            <>
+              <div className="navbar-mobile-account">
+                <div className="navbar-mobile-account-avatar">
+                  {authLabel.charAt(0).toUpperCase()}
+                </div>
+                <span className="navbar-mobile-account-name">{authLabel}</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={busy}
+                className="navbar-mobile-link navbar-mobile-link--ghost navbar-mobile-link--button"
+              >
+                {busy ? "Signing Out..." : "Sign Out"}
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/signup" className="navbar-mobile-link navbar-mobile-link--primary">
+                Sign Up
+              </Link>
+              <Link href="/login" className="navbar-mobile-link navbar-mobile-link--ghost">
+                Sign In
+              </Link>
+            </>
+          )
+        ) : null}
       </div>
     </nav>
   );
