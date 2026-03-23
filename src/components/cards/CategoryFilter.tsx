@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { TAGS } from "@/data/cards";
 
 export default function CategoryFilter({

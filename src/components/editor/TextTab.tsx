@@ -6,10 +6,12 @@ export default function TextTab({
   customization,
   accent,
   onChange,
+  onResetCoverTextPosition,
 }: {
   customization: CardCustomization;
   accent: string;
   onChange: (partial: Partial<CardCustomization>) => void;
+  onResetCoverTextPosition?: () => void;
 }) {
   const inputStyle = {
     background: "rgba(255,255,255,.04)",
@@ -17,7 +19,7 @@ export default function TextTab({
     borderRadius: "8px",
     color: "#e0e0e0",
     padding: "10px 14px",
-    fontSize: "13px",
+    fontSize: "16px",
     width: "100%",
     outline: "none",
     fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
@@ -114,6 +116,47 @@ export default function TextTab({
           onFocus={(e) => (e.target.style.borderColor = accent)}
           onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,.08)")}
         />
+      </div>
+
+      <div
+        style={{
+          padding: "12px 14px",
+          borderRadius: "10px",
+          background: "rgba(255,255,255,.03)",
+          border: "1px solid rgba(255,255,255,.06)",
+        }}
+      >
+        <div style={labelStyle}>Cover Text Position</div>
+        <p
+          style={{
+            fontSize: "12px",
+            lineHeight: 1.6,
+            color: "rgba(255,255,255,.5)",
+            margin: 0,
+          }}
+        >
+          Drag the cover text directly on the preview to place it where you want.
+        </p>
+        {onResetCoverTextPosition && (
+          <button
+            onClick={onResetCoverTextPosition}
+            style={{
+              marginTop: "10px",
+              border: `1px solid ${accent}30`,
+              background: `${accent}12`,
+              color: accent,
+              borderRadius: "999px",
+              padding: "8px 12px",
+              fontSize: "10px",
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+            }}
+          >
+            Reset Text Position
+          </button>
+        )}
       </div>
     </div>
   );

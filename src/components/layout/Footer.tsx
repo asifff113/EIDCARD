@@ -11,8 +11,7 @@ export default function Footer() {
         </svg>
       </div>
       <p className="text-[10px] tracking-[3px] text-[#1e1a10] uppercase">
-        designed with <span className="text-[var(--gold)]">♥</span> for eid
-        &nbsp;·&nbsp; royal blessings &nbsp;·&nbsp; 1446 AH
+        crafted for eid &nbsp;·&nbsp; create, customize, share &nbsp;·&nbsp; 1446 AH
       </p>
     </footer>
   );

@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eid Card
 
-## Getting Started
+Next.js app for creating Eid greeting cards, editing their cover and inside note, and publishing read-only shared versions.
 
-First, run the development server:
+## Features
+
+- Email/password sign up and sign in with Supabase
+- Protected editing flows for the home creator and `/editor/[id]`
+- Public shared-card links at `/shared/[slug]` that show only the final output
+- PNG download for users who want to save the card and share it manually
+- Mobile-friendly editor and share flow
+
+## 1. Install dependencies
+
+```bash
+npm install
+```
+
+## 2. Configure Supabase
+
+Copy the example env file:
+
+```bash
+copy .env.example .env.local
+```
+
+Add these values:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_or_anon_key
+```
+
+## 3. Create the share table
+
+Run the SQL in:
+
+```text
+supabase/migrations/20260320_shared_cards.sql
+```
+
+This creates the `shared_cards` table plus policies so:
+
+- anyone can read a published shared card
+- only the authenticated owner can insert, update, or delete their own shared cards
+
+## 4. Supabase Auth settings
+
+In your Supabase dashboard:
+
+- keep Email auth enabled
+- add your local and production callback URLs to Redirect URLs
+- include `http://localhost:3000/auth/callback`
+- include your production `/auth/callback` URL too
+
+If email confirmation is enabled, new users will confirm by email first. If it is disabled, they will sign in immediately after sign up.
+
+## 5. Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Sharing behavior
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Signed-in users can edit cards.
+- The `Share Link` action stores the current card snapshot in Supabase and creates a public `/shared/[slug]` page.
+- Visitors opening that link only see the final rendered card, not the editor.
+- Users can still use `Download PNG` and share the image manually anywhere.
 
-## Learn More
+## Verification
 
-To learn more about Next.js, take a look at the following resources:
+These commands pass on the current codebase:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npm run build
+```

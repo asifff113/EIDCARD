@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import type { CardTemplate, CardCustomization } from "@/types/editor";
-import { DEFAULT_CUSTOMIZATION } from "@/types/editor";
+import { DEFAULT_CUSTOMIZATION, createInitialCustomization } from "@/types/editor";
 
 export function useCardEditor() {
   const [step, setStep] = useState<"pick" | "edit">("pick");
@@ -11,10 +11,7 @@ export function useCardEditor() {
 
   const selectTemplate = useCallback((template: CardTemplate) => {
     setSelectedTemplate(template);
-    setCustomization({
-      ...DEFAULT_CUSTOMIZATION,
-      greetingAr: template.ar || DEFAULT_CUSTOMIZATION.greetingAr,
-    });
+    setCustomization(createInitialCustomization(template));
     setStep("edit");
   }, []);
 

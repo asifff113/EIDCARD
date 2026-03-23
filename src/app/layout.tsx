@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Playfair_Display, Amiri, Libre_Baskerville, Jost, Italiana, Cormorant_Garamond } from "next/font/google";
+import { DM_Sans, Playfair_Display, Amiri, Libre_Baskerville, Jost, Italiana, Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -47,6 +47,12 @@ const cormorant = Cormorant_Garamond({
   style: ["normal", "italic"],
 });
 
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
+
 export const metadata: Metadata = {
   title: "Eid Mubarak — Share Beautiful Eid Cards",
   description:
@@ -65,7 +71,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmSans.variable} ${playfair.variable} ${amiri.variable} ${libreBaskerville.variable} ${jost.variable} ${italiana.variable} ${cormorant.variable} font-sans antialiased`}
+        className={`${dmSans.variable} ${playfair.variable} ${amiri.variable} ${libreBaskerville.variable} ${jost.variable} ${italiana.variable} ${cormorant.variable} ${inter.variable} font-sans antialiased`}
       >
         {children}
       </body>
